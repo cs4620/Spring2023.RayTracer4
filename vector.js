@@ -68,4 +68,8 @@ class Vector3 {
   minus(other) {
     return this.add(other.negate());
   }
+
+  scale(scalar){
+    return new Vector3(this.x * scalar, this.y * scalar, this.z*scalar);
+  }
 }
