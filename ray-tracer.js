@@ -43,6 +43,52 @@ function render(x, y, jitterAmount) {
   //Note that in an optimized ray tracer, 
   //you can use spatial subdivision to reduce this from 
   //O(n) to O(log(n))
+  // for (let rayTracedObject of Scene.scene.rayTracedObjects) {
+
+  //   //Get the geometry of the current object
+  //   let geometry = rayTracedObject.geometry
+
+  //   //Find the intersection with this object
+  //   let collision = geometry.intersect(origin, direction);
+
+  //   //Check to see if the collision exists...
+  //   //...and if it is closer than any other collision we've seen
+  //   if (collision && collision.timeToCollision < closestPositiveT) {
+  //     //Get the distance to collision
+  //     closestPositiveT = collision.timeToCollision
+
+  //     //Get the location of the collision
+  //     let c = collision.collisionLocation
+  //     let normal = collision.normalAtCollision
+
+  //     //Use the shader to calculate the color at this collision
+  //     rayTracedPixel = rayTracedObject.shader.illuminateObject(origin, c, normal, rayTracedObject)
+  //   }
+
+  //   //Store the color as a string
+  //   // let pixelString = `rgb(${rayTracedPixel.r}, ${rayTracedPixel.g}, ${rayTracedPixel.b})`;
+  // }
+  let result = closestCollision(origin, direction, 1);
+  if (!result) return rayTracedPixel;
+  rayTracedPixel = result.rayTracedObject.shader.illuminateObject(
+    origin, 
+    result.collisionLocation, 
+    result.normalAtCollision, 
+    result.rayTracedObject
+    )
+
+  return rayTracedPixel;
+
+}
+
+function closestCollision(origin, direction, remaining) {
+  if (remaining <= 0) return;
+  let closestPositiveT = 1000000;
+  let closestCollision;
+  //let backgroundColor = Scene.scene?.options?.backgroundColor ? Scene.scene.options.backgroundColor : new Pixel(100, 100, 100)
+
+  //The color of the closest collision for this pixel
+  //let rayTracedPixel = backgroundColor;
   for (let rayTracedObject of Scene.scene.rayTracedObjects) {
 
     //Get the geometry of the current object
@@ -56,20 +102,19 @@ function render(x, y, jitterAmount) {
     if (collision && collision.timeToCollision < closestPositiveT) {
       //Get the distance to collision
       closestPositiveT = collision.timeToCollision
+      collision.rayTracedObject = rayTracedObject;
+
+      closestCollision = collision;
 
       //Get the location of the collision
       let c = collision.collisionLocation
       let normal = collision.normalAtCollision
 
       //Use the shader to calculate the color at this collision
-      rayTracedPixel = rayTracedObject.shader.illuminateObject(origin, c, normal, rayTracedObject)
+     // rayTracedPixel = collision.rayTracedObject.shader.illuminateObject(origin, c, normal, rayTracedObject, remaining - 1)
     }
-
-    //Store the color as a string
-    let pixelString = `rgb(${rayTracedPixel.r}, ${rayTracedPixel.g}, ${rayTracedPixel.b})`;
   }
-  return rayTracedPixel;
-
+  return closestCollision;
 }
 
 
@@ -98,40 +143,40 @@ async function main() {
   for (let i = 0; i < stop; i++) {
     for (let y = 0; y < height; y++) {
       //setTimeout(() => {
-        for (let x = 0; x < width; x++) {
-          if (!image[x][y])
-            image[x][y] = []
-          let entry = image[x][y]
-          let count = entry.length
-          //Drop out if our color is consistent enough
-          if(count > minCount){
-            let z = 1;
-          }
-          if(x == 202 && y == 140){
-            let aa = 1;
-          }
-
-          let color = render(x, y, .001);
-          count++;
-          entry.push(color)
-
-          let r = entry.map(p => p.r).reduce((a, b) => a + b, 0) / count;
-          let g = entry.map(p => p.g).reduce((a, b) => a + b, 0) / count;
-          let b = entry.map(p => p.b).reduce((a, b) => a + b, 0) / count;
-          ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
-          ctx.fillRect(x, y, 1, 1)
+      for (let x = 0; x < width; x++) {
+        if (!image[x][y])
+          image[x][y] = []
+        let entry = image[x][y]
+        let count = entry.length
+        //Drop out if our color is consistent enough
+        if (count > minCount) {
+          let z = 1;
         }
-        if (i > maxIteration) {
-          maxIteration = i
-          console.log(maxIteration / stop)
+        if (x == 202 && y == 140) {
+          let aa = 1;
         }
+
+        let color = render(x, y, .001);
+        count++;
+        entry.push(color)
+
+        let r = entry.map(p => p.r).reduce((a, b) => a + b, 0) / count;
+        let g = entry.map(p => p.g).reduce((a, b) => a + b, 0) / count;
+        let b = entry.map(p => p.b).reduce((a, b) => a + b, 0) / count;
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+        ctx.fillRect(x, y, 1, 1)
+      }
+      if (i > maxIteration) {
+        maxIteration = i
+        console.log(maxIteration / stop)
+      }
       //})
 
     }
   }
 
   ctx.fillStyle = "red";
-  ctx.fillRect(width/2,height/2,1,1);
+  ctx.fillRect(width / 2, height / 2, 1, 1);
 
 }
 

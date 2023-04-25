@@ -46,7 +46,7 @@ let perspectiveCamera = new Camera(
 let shader = new DiffuseShader({r:255, g:255, b:255});
 let shader2 = new DiffuseShader({r:0, g:255, b:0});
 let ambientShader = new AmbientShader({r:100, g:100, b:100})
-let mixed = new MixShader(shader2, ambientShader, .1)
+let mixed = new MixShader(shader2, ambientShader, .9)
 
 //--
 //RayTracedObject definition(s)
