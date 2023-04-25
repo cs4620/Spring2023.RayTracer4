@@ -1,57 +1,82 @@
+/**
+ * A triangular mesh
+ */
 class Mesh {
+  /**
+   * Factory method that takes an OBJ and creates a mesh
+   * @param {String} string A string in OBJ format
+   * @returns A mesh represented by the OBJ string
+   */
   static fromOBJ(string) {
-    let obj = `
-    v 0.000000 0.000000 0.000000
-    v 1.000000 0.000000 0.000000
-    v 0.000000 1.000000 0.000000
-    vt 1.000000 0.000000
-    vt 0.000000 1.000000
-    vt 0.000000 0.000000
-    vn 0.0000 0.0000 1.0000
-    f 1/1/1 2/2/1 3/3/1
-`
 
+    //Break down the string by lines
     let lines = string.split('\n');
 
-    let vs = []
-    let vts = []
-    let vns = []
-    let fs = []
+    //Where values will be stored
+    let vs = []   //Vertex array
+    let vts = []  //Texture coordinates array
+    let vns = []  //Normals array
+    let fs = []   //Faces array
 
+    //Loop over all the lines
     for (let line of lines) {
+      //Trim everything so whitespace doesn't break the parsel
       let trimmedLine = line.trim()
+
+      //If the string is empty after trimming, ignore it.
       if (trimmedLine.length == 0) continue;
+
+      //Split the line delimited by spaces
       let parts = line.trim().split(" ")
+
+      //Look at the lineHeader, i.e., the first part of the line
       let lineHeader = parts[0].trim();
+
+      //Handle vertices
       if (lineHeader == 'v') {
         //push onto v
         let v = new Vector3(parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3]));
         vs.push(v)
       }
+      //Handle texture coordinates
       if (lineHeader == 'vt') {
         //push onto vt
         let vt = new Vector3(parseFloat(parts[1]), parseFloat(parts[2]));
         vts.push(vt)
       }
+      //Handle normals
       if (lineHeader == 'vn') {
         //push onto n
         let vn = new Vector3(parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3]));
         vns.push(vn);
       }
+      //Handle faces
       if (lineHeader == 'f') {
         //push onto f
         let face = {
           points: []
         }
+        //Loop over the parts of a face definition
         for (let i = 1; i <= 3; i++) {
+          //Grab te part we are on
           let first = parts[i]
+
+          //Split on forward slashes
           let coords = first.split('/')
+          
+          //Get the vertex index
           let vIndex = parseInt(coords[0].trim()) - 1;
+
+          //Get the texture coordinate index
           let vtIndex = parseInt(coords[1].trim()) - 1;
+
+          //Get the normal index
           let vnIndex = parseInt(coords[2].trim()) - 1;
 
+          //Put the values into a vertex
           let temp = new Vertex(vs[vIndex], vts[vtIndex], vns[vnIndex])
 
+          //Add the vertex to the current face
           face.points.push(temp)
         }
         fs.push(face)
@@ -60,30 +85,53 @@ class Mesh {
 
     //Generate a triangle
     let triangle = new Triangle(fs[0].points[0], fs[0].points[1], fs[0].points[2])
+    
     //Generate a mesh
     let mesh = new Mesh([triangle]);
     return mesh;
   }
 
+  /**
+   * Given a list of triangles, generate a new mesh object
+   * @param {TriangleArray} triangles 
+   */
   constructor(triangles) {
     this.triangles = triangles;
   }
-  intersect(o, d) {
-    let closest = 10000;
-    let best = undefined
+
+  /**
+   * Find the intersection of the ray with this mesh.
+   * 
+   * @param {Vector3} rayOrigin The origin of the ray
+   * @param {Vector3} rayDirection The direction of the ray
+   * @returns The collision point (if any)
+   */
+  intersect(rayOrigin, rayDirection) {
+    let closest = 10000; //Store the closest collision distance
+    let best = undefined //Store the closest collision object
+
+    //Loop over the triangles
     for (let triangle of this.triangles) {
-      let intersection = triangle.intersect(o, d)
+      //Find the intersection
+      let intersection = triangle.intersect(rayOrigin, rayDirection)
+
+      //If the intersection exists...
       if (intersection) {
+        //...and the intersection is closer than any we've seen before...
         if (intersection.timeToCollision < closest) {
+          //Store the collision details for further comparison
           best = intersection;
           closest = intersection.timeToCollision
         }
       }
     }
+    //If we found an intersection...
     if (best) {
+      //...return its collision object
       return best;
     }
     else {
+      //...otherwise, return undefined
       return;
     }
   }
