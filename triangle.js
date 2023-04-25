@@ -19,14 +19,15 @@ class Triangle{
     return this.two.position.minus(this.three.position).normalize();
   }
   get threeTwo(){
-    return this.three.position.minus(this.three.position).normalize();
+    return this.three.position.minus(this.two.position).normalize();
   }
-  intersect(o,d){
+  intersect(origin,direction){
     //First find the collision on the plane
-    let ABC = this.oneTwo.cross(this.threeTwo);
+    let ABC = this.threeTwo.cross(this.oneTwo).normalize();
     let D = -(ABC.dot(this.one.position));
-    let t = (-D-o.dot(ABC))/(d.dot(ABC))
-    let c = o.plus(d.scale(t));
-    return {t, v:c};
+    let timeToCollision = (-D-origin.dot(ABC))/(direction.dot(ABC))
+    let collisionLocation = origin.add(direction.scale(timeToCollision));
+    // return {timeToCollision, collisionLocation};
+    return new Collision(timeToCollision, collisionLocation, ABC);
   }
 }

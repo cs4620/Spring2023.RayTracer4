@@ -37,10 +37,10 @@ function main(scene) {
         let collision = geometry.intersect(origin, direction);
 
 
-        if (collision && collision.t < closestPositiveT) {
-          closestPositiveT = collision.t
-          let c = collision.v
-          let normal = (c.minus(geometry.center)).normalize()
+        if (collision && collision.timeToCollision < closestPositiveT) {
+          closestPositiveT = collision.timeToCollision
+          let c = collision.collisionLocation
+          let normal = collision.normalAtCollision
           rayTracedPixel =  rayTracedObject.shader.illuminateObject(origin, c, normal, [])
         }
 
