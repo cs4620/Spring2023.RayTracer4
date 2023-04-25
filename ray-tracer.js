@@ -4,8 +4,8 @@
  */
 function main(scene) {
   //Grab the width and height from the scene object (if they exist)
-  let width = scene?.options?.width ? scene.options.width : 100
-  let height = scene?.options?.height ? scene.options.height : 100
+  let width = scene?.options?.width ? scene.options.width : 400
+  let height = scene?.options?.height ? scene.options.height : 400
 
   //Grab the background color from the scene object (if it is defined)
   let backgroundColor = scene?.options?.backgroundColor ? scene.options.backgroundColor: new Pixel(255, 0, 0)
@@ -62,9 +62,12 @@ function main(scene) {
           //Get the location of the collision
           let c = collision.collisionLocation
           let normal = collision.normalAtCollision
+
+          
+          
           
           //Use the shader to calculate the color at this collision
-          rayTracedPixel =  rayTracedObject.shader.illuminateObject(origin, c, normal, [])
+          rayTracedPixel =  rayTracedObject.shader.illuminateObject(origin, c, normal, rayTracedObject, scene)
         }
 
         //Store the color as a string
@@ -76,6 +79,10 @@ function main(scene) {
       }
     }
   }
+}
+
+function castRay(){
+
 }
 
 

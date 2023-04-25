@@ -16,8 +16,8 @@ f 1/1/1 2/2/1 3/3/1
 //-- 
 
 //Sphere defition(s)
-let s = new Sphere(new Vector3(20, 20, 0), 50);
-let s2 = new Sphere(new Vector3(-20, -20, 0), 40);
+let s = new Sphere(new Vector3(0, 20, 0), 50);
+let s2 = new Sphere(new Vector3(0, -60, 0), 40);
 
 //Mesh definition(s)
 let mesh = Mesh.fromOBJ(objString);
