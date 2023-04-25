@@ -38,8 +38,8 @@ function main(scene) {
       //Determine the origin and direction of the ray
       let startX = x - width / 2;
       let startY = y - height / 2;
-      let origin = new Vector3(startX, startY, scene.camera.z);
-      let direction = new Vector3(0, 0, -1);
+      let origin = scene.camera.getOrigin(startX, startY);
+      let direction = scene.camera.getDirection(startX/(width/2), startY/(height/2));
 
       //Loop over all the rayTracedObjects in this scene
       //Note that in an optimized ray tracer, 

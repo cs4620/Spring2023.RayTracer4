@@ -2,6 +2,15 @@
  * A class for storing x,y,and z values
  * */
 class Vector3 {
+
+  static zero = new Vector3();
+  static one = new Vector3(1,1,1);
+  static forward = new Vector3(0,0,-1);
+  static backward = new Vector3(0,0,1);
+  static left = new Vector3(0,0,-1);
+  static right = new Vector3(0,0,1);
+  static up = new Vector3(0,1,0);
+  static down = new Vector3(0,-1,0)
   /**
    * Creates a new Vector3.
    * <p>
