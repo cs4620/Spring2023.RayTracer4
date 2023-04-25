@@ -3,11 +3,13 @@
  * @param {Scene} scene The scene object with rendering details
  */
 function main(scene) {
+  //Grab the width and height from the scene object (if they exist)
   let width = scene?.options?.width ? scene.options.width : 100
   let height = scene?.options?.height ? scene.options.height : 100
 
+  //Grab the background color from the scene object (if it is defined)
   let backgroundColor = scene?.options?.backgroundColor ? scene.options.backgroundColor: new Pixel(255, 0, 0)
-  let image = new Image(width, height);
+  // let image = new Image(width, height);
 
   let canvas = document.querySelector("canvas");
   canvas.width = width;
@@ -44,10 +46,10 @@ function main(scene) {
           rayTracedPixel =  rayTracedObject.shader.illuminateObject(origin, c, normal, [])
         }
 
-        image.setPixel(x, y, rayTracedPixel);
+        // image.setPixel(x, y, rayTracedPixel);
 
-        let pixel = image.getPixel(x, y);
-        let pixelString = `rgb(${pixel.r}, ${pixel.g}, ${pixel.b})`;
+        // let pixel = image.getPixel(x, y);
+        let pixelString = `rgb(${rayTracedPixel.r}, ${rayTracedPixel.g}, ${rayTracedPixel.b})`;
         ctx.fillStyle = pixelString;
         ctx.fillRect(x, y, 1, 1);
       }
