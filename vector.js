@@ -14,6 +14,27 @@ class Vector3 {
     this.z = z;
     Object.freeze(this);
   }
+
+  /**
+   * Get the x, treating it as r in RGB
+   */
+  get r(){
+    return this.x;
+  }
+
+  /**
+   * Get the y, treating it as g in RGB
+   */
+  get g(){
+    return this.y;
+  }
+
+  /**
+   * Get the z, treating it as b in RGB
+   */
+  get b(){
+    return this.z
+  }
   /**
    * Creates a new Vector3 of length 1 from this vector.
    * @returns {Vector3} The normalized vector.
