@@ -1,15 +1,84 @@
+"use strict"
+
+function evenRand(amount) {
+  return (Math.random() * 2 - 1) * amount
+}
 /**
  * Run our ray tracer
- * @param {Scene} scene The scene object with rendering details
  */
-function main(scene) {
+function render(x, y, jitterAmount) {
+  //console.log("Going")
   //Grab the width and height from the scene object (if they exist)
-  let width = scene?.options?.width ? scene.options.width : 400
-  let height = scene?.options?.height ? scene.options.height : 400
+  let width = Scene.scene?.options?.width ? Scene.scene.options.width : 400
+  let height = Scene.scene?.options?.height ? Scene.scene.options.height : 400
 
   //Grab the background color from the scene object (if it is defined)
-  let backgroundColor = scene?.options?.backgroundColor ? scene.options.backgroundColor: new Pixel(255, 0, 0)
+  let backgroundColor = Scene.scene?.options?.backgroundColor ? Scene.scene.options.backgroundColor : new Pixel(100, 100, 100)
   // let image = new Image(width, height);
+
+
+
+  //Debug code
+  if (x == 202 && y == 140) {
+    //console.log("stop")
+    let abc = 0;
+  }
+
+  //The color of the closest collision for this pixel
+  let rayTracedPixel = backgroundColor;
+
+  //The distance to the closest collision for this pixel
+  let closestPositiveT = 10000000
+
+  //Determine the origin and direction of the ray
+  let startX = x - width / 2;
+  let startY = y - height / 2;
+  let origin = Scene.scene.camera.getOrigin(startX, startY);
+  let direction = Scene.scene.camera.getDirection(startX / (width / 2), startY / (height / 2));
+
+  let jittered = direction.add(new Vector3(evenRand(jitterAmount), evenRand(jitterAmount), evenRand(jitterAmount))).normalize()
+
+  direction = jittered;
+  //Loop over all the rayTracedObjects in this scene
+  //Note that in an optimized ray tracer, 
+  //you can use spatial subdivision to reduce this from 
+  //O(n) to O(log(n))
+  for (let rayTracedObject of Scene.scene.rayTracedObjects) {
+
+    //Get the geometry of the current object
+    let geometry = rayTracedObject.geometry
+
+    //Find the intersection with this object
+    let collision = geometry.intersect(origin, direction);
+
+    //Check to see if the collision exists...
+    //...and if it is closer than any other collision we've seen
+    if (collision && collision.timeToCollision < closestPositiveT) {
+      //Get the distance to collision
+      closestPositiveT = collision.timeToCollision
+
+      //Get the location of the collision
+      let c = collision.collisionLocation
+      let normal = collision.normalAtCollision
+
+      //Use the shader to calculate the color at this collision
+      rayTracedPixel = rayTracedObject.shader.illuminateObject(origin, c, normal, rayTracedObject)
+    }
+
+    //Store the color as a string
+    let pixelString = `rgb(${rayTracedPixel.r}, ${rayTracedPixel.g}, ${rayTracedPixel.b})`;
+  }
+  return rayTracedPixel;
+
+}
+
+
+async function main() {
+
+  //Grab the width and height from the scene object (if they exist)
+  let width = Scene.scene?.options?.width ? Scene.scene.options.width : 400
+  let height = Scene.scene?.options?.height ? Scene.scene.options.height : 400
+
 
   let canvas = document.querySelector("canvas");
   canvas.width = width;
@@ -17,75 +86,56 @@ function main(scene) {
   let ctx = canvas.getContext("2d")
 
   //Test code
-  let rayTracedObjects = scene.rayTracedObjects
+  let rayTracedObjects = Scene.scene.rayTracedObjects
+
+  let image = Array.from(Array(width), () => new Array(height))
+  let maxIteration = 0;
+  let minCount = 1;
+  let stop = 1;
 
   //Ray Tracer starts
   //Loop over all the pixels
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
+  for (let i = 0; i < stop; i++) {
+    for (let y = 0; y < height; y++) {
+      //setTimeout(() => {
+        for (let x = 0; x < width; x++) {
+          if (!image[x][y])
+            image[x][y] = []
+          let entry = image[x][y]
+          let count = entry.length
+          //Drop out if our color is consistent enough
+          if(count > minCount){
+            let z = 1;
+          }
+          if(x == 202 && y == 140){
+            let aa = 1;
+          }
 
-      //Debug code
-      if (x == 50 && y == 50) {
-        console.log("stop")
-      }
+          let color = render(x, y, .001);
+          count++;
+          entry.push(color)
 
-      //The color of the closest collision for this pixel
-      let rayTracedPixel = backgroundColor;
-
-      //The distance to the closest collision for this pixel
-      let closestPositiveT = 10000000
-
-      //Determine the origin and direction of the ray
-      let startX = x - width / 2;
-      let startY = y - height / 2;
-      let origin = scene.camera.getOrigin(startX, startY);
-      let direction = scene.camera.getDirection(startX/(width/2), startY/(height/2));
-
-      //Loop over all the rayTracedObjects in this scene
-      //Note that in an optimized ray tracer, 
-      //you can use spatial subdivision to reduce this from 
-      //O(n) to O(log(n))
-      for (let rayTracedObject of rayTracedObjects) {
-        
-        //Get the geometry of the current object
-        let geometry = rayTracedObject.geometry
-
-        //Find the intersection with this object
-        let collision = geometry.intersect(origin, direction);
-
-        //Check to see if the collision exists...
-        //...and if it is closer than any other collision we've seen
-        if (collision && collision.timeToCollision < closestPositiveT) {
-          //Get the distance to collision
-          closestPositiveT = collision.timeToCollision
-          
-          //Get the location of the collision
-          let c = collision.collisionLocation
-          let normal = collision.normalAtCollision
-
-          
-          
-          
-          //Use the shader to calculate the color at this collision
-          rayTracedPixel =  rayTracedObject.shader.illuminateObject(origin, c, normal, rayTracedObject, scene)
+          let r = entry.map(p => p.r).reduce((a, b) => a + b, 0) / count;
+          let g = entry.map(p => p.g).reduce((a, b) => a + b, 0) / count;
+          let b = entry.map(p => p.b).reduce((a, b) => a + b, 0) / count;
+          ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+          ctx.fillRect(x, y, 1, 1)
         }
+        if (i > maxIteration) {
+          maxIteration = i
+          console.log(maxIteration / stop)
+        }
+      //})
 
-        //Store the color as a string
-        let pixelString = `rgb(${rayTracedPixel.r}, ${rayTracedPixel.g}, ${rayTracedPixel.b})`;
-        
-        //Use the canvas to draw on the screen.
-        ctx.fillStyle = pixelString;
-        ctx.fillRect(x, y, 1, 1);
-      }
     }
   }
+
+  ctx.fillStyle = "red";
+  ctx.fillRect(width/2,height/2,1,1);
+
 }
-
-function castRay(){
-
-}
-
 
 //Run the main ray tracer
+main();
 
-main(scene);
+

@@ -39,34 +39,42 @@ let perspectiveCamera = new Camera(
   Camera.Perspective,
   Math.PI/4
   )
-// let camera = new Vector3(0, 0, 51)
 
 //--
 //Shader definition(s)
 //-
 let shader = new DiffuseShader({r:255, g:255, b:255});
 let shader2 = new DiffuseShader({r:0, g:255, b:0});
+let ambientShader = new AmbientShader({r:100, g:100, b:100})
+let mixed = new MixShader(shader2, ambientShader, .1)
 
 //--
 //RayTracedObject definition(s)
 //--
 let rayTracedSphere1 = new RayTracedObject(s, shader);
-let rayTracedSphere2 = new RayTracedObject(s2, shader2);
+let rayTracedSphere2 = new RayTracedObject(s2, mixed);
 let rayTracedTriangle = new RayTracedObject(mesh, shader);
+
+//--
+//Lights
+//
+
+let sunLight = new SunLight(Vector3.one, new Vector3(0,-1,0));
+let lights = [sunLight];
 
 //--
 //Scene definition(s)
 //--
-let twoSphereSceneOrthographic = new Scene([rayTracedSphere1, rayTracedSphere2], orthographicCamera)
-let oneSphereSceneOrthographic = new Scene([rayTracedSphere1],  orthographicCamera)
-let triangleSceneOrthographic = new Scene([rayTracedTriangle], orthographicCamera);
+let twoSphereSceneOrthographic = new Scene([rayTracedSphere1, rayTracedSphere2], orthographicCamera, lights)
+let oneSphereSceneOrthographic = new Scene([rayTracedSphere1],  orthographicCamera,lights )
+let triangleSceneOrthographic = new Scene([rayTracedTriangle], orthographicCamera, lights);
 
-let twoSphereScenePerspective = new Scene([rayTracedSphere1, rayTracedSphere2], perspectiveCamera, Math.PI/4)
-let oneSphereScenePerspective = new Scene([rayTracedSphere1],  perspectiveCamera)
-let triangleScenePerspective = new Scene([rayTracedTriangle], perspectiveCamera);
+let twoSphereScenePerspective = new Scene([rayTracedSphere1,  rayTracedSphere2], perspectiveCamera, lights)
+let oneSphereScenePerspective = new Scene([rayTracedSphere1],  perspectiveCamera, lights)
+let triangleScenePerspective = new Scene([rayTracedTriangle], perspectiveCamera, lights);
 
 //--
 //Final scene definition.
 //This is the scene that gets rendered
 //--
-let scene = twoSphereScenePerspective;
+Scene.scene = twoSphereScenePerspective;

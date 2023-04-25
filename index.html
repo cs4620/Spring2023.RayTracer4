@@ -28,13 +28,14 @@
   <script>
     document.querySelector("#canvas").addEventListener("mousemove", mousemove)
     function mousemove(e){
-      document.title = (e.clientX +" " + e.clientY)
+      document.title = (e.offsetX +" " + e.offsetY)
     }
   </script>
   <script src="vector.js"></script>
   <script src="pixel.js"></script>
   <script src="sphere.js"></script>
   <script src="vertex.js"></script>
+  <script src="light.js"></script>
   <script src="camera.js"></script>
   <script src="collision.js"></script>
   <script src="triangle.js"></script>
