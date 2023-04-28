@@ -156,7 +156,7 @@ async function main() {
           let aa = 1;
         }
 
-        let color = render(x, y, .001);
+        let color = render(x, y, 0);
         count++;
         entry.push(color)
 

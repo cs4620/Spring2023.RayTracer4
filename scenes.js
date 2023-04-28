@@ -59,6 +59,7 @@ let shader = new DiffuseShader({r:255, g:255, b:255});
 let shader2 = new DiffuseShader({r:0, g:255, b:0});
 let ambientShader = new AmbientShader({r:100, g:100, b:100})
 let mixed = new MixShader(shader2, ambientShader, .9)
+let volumeShader = new VolumeShader();
 
 //--
 //RayTracedObject definition(s)
@@ -66,7 +67,7 @@ let mixed = new MixShader(shader2, ambientShader, .9)
 let rayTracedSphere1 = new RayTracedObject(s, shader);
 let rayTracedSphere2 = new RayTracedObject(s2, mixed);
 let rayTracedTriangle = new RayTracedObject(mesh, shader);
-let rayTracedPlane = new RayTracedObject(planeMesh, shader);
+let rayTracedPlane = new RayTracedObject(planeMesh, volumeShader);
 
 //--
 //Lights

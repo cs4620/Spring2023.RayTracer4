@@ -28,9 +28,9 @@ class DiffuseShader {
       if (inShadow) dot = 0;
       if (dot <= 0)
         dot = 0
-      lightSum = lightSum.add(new Vector3(this.diffuseColor.r * dot,this.diffuseColor.g * dot,this.diffuseColor.b * dot ));
+      lightSum = lightSum.add(new Vector3(this.diffuseColor.r * dot, this.diffuseColor.g * dot, this.diffuseColor.b * dot));
     }
-    
+
     return { r: lightSum.r, g: lightSum.g, b: lightSum.b };
   }
 }
@@ -87,6 +87,25 @@ class ReflectiveShader {
     if (dot <= 0)
       dot = 0
     return { r: this.diffuseColor.r * dot, g: this.diffuseColor.g * dot, b: this.diffuseColor.b * dot };
+  }
+}
+
+class VolumeShader {
+  illuminateObject(rayFrom, rayCollision, normal, collisionObject, remaining) {
+
+    let scale = 10;
+    let light = true;
+    let x = Math.floor(rayCollision.x/10);
+    let y = Math.floor(rayCollision.y/10);
+    let z = Math.floor(rayCollision.z/10);
+    let sum = x + y + z;
+    if (sum % 2 != 0) {
+      light = false;
+    }
+    if (light)
+      return { r: 255, g: 0, b: 0 };
+    else
+      return {r:0,g:255,b:0};
   }
 }
 
