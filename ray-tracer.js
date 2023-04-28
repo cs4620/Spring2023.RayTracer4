@@ -71,11 +71,11 @@ function render(x, y, jitterAmount) {
   let result = closestCollision(origin, direction, 1);
   if (!result) return rayTracedPixel;
   rayTracedPixel = result.rayTracedObject.shader.illuminateObject(
-    origin, 
-    result.collisionLocation, 
-    result.normalAtCollision, 
+    origin,
+    result.collisionLocation,
+    result.normalAtCollision,
     result.rayTracedObject
-    )
+  )
 
   return rayTracedPixel;
 
@@ -111,7 +111,7 @@ function closestCollision(origin, direction, remaining) {
       let normal = collision.normalAtCollision
 
       //Use the shader to calculate the color at this collision
-     // rayTracedPixel = collision.rayTracedObject.shader.illuminateObject(origin, c, normal, rayTracedObject, remaining - 1)
+      // rayTracedPixel = collision.rayTracedObject.shader.illuminateObject(origin, c, normal, rayTracedObject, remaining - 1)
     }
   }
   return closestCollision;
@@ -152,7 +152,7 @@ async function main() {
         if (count > minCount) {
           let z = 1;
         }
-        if (x == 202 && y == 140) {
+        if (x == Math.floor(width / 2) && y == Math.floor(height / 2)) {
           let aa = 1;
         }
 

@@ -60,16 +60,21 @@ let rayTracedTriangle = new RayTracedObject(mesh, shader);
 //
 
 let sunLight = new SunLight(Vector3.one, new Vector3(0,-1,0));
+let sunLight2 = new SunLight(Vector3.one, new Vector3(1,-1,1))
 let lights = [sunLight];
+let lights2 = [sunLight2]
+let dual = [sunLight, sunLight2]
 
 //--
 //Scene definition(s)
 //--
 let twoSphereSceneOrthographic = new Scene([rayTracedSphere1, rayTracedSphere2], orthographicCamera, lights)
+let twoSphereDualOrthographic = new Scene([rayTracedSphere1,  rayTracedSphere2], orthographicCamera, dual)
 let oneSphereSceneOrthographic = new Scene([rayTracedSphere1],  orthographicCamera,lights )
 let triangleSceneOrthographic = new Scene([rayTracedTriangle], orthographicCamera, lights);
 
 let twoSphereScenePerspective = new Scene([rayTracedSphere1,  rayTracedSphere2], perspectiveCamera, lights)
+let twoSphereDualPerspective = new Scene([rayTracedSphere1,  rayTracedSphere2], perspectiveCamera, dual)
 let oneSphereScenePerspective = new Scene([rayTracedSphere1],  perspectiveCamera, lights)
 let triangleScenePerspective = new Scene([rayTracedTriangle], perspectiveCamera, lights);
 
@@ -77,4 +82,4 @@ let triangleScenePerspective = new Scene([rayTracedTriangle], perspectiveCamera,
 //Final scene definition.
 //This is the scene that gets rendered
 //--
-Scene.scene = twoSphereScenePerspective;
+Scene.scene = twoSphereDualPerspective;

@@ -1,5 +1,5 @@
 class Shader {
-  
+
 }
 
 class DiffuseShader {
@@ -8,29 +8,34 @@ class DiffuseShader {
   }
   illuminateObject(rayFrom, rayCollision, normal, collisionObject, remaining) {
 
-    let inShadow = false;
+    let lightSum = Vector3.zero;
+    for (let light of Scene.scene.lights) {
+      let inShadow = false;
 
-    //Manually check for shadows
-    for (let object of Scene.scene.rayTracedObjects) {
-      if (object == collisionObject) continue
-      let directionToLight = Scene.scene.lights[0].direction.normalize()
+      //Manually check for shadows
+      for (let object of Scene.scene.rayTracedObjects) {
+        if (object == collisionObject) continue
+        let directionToLight = light.direction.normalize()
 
-      let collision = object.geometry.intersect(rayCollision, directionToLight)
-      if (collision) {
-        inShadow = true;
-        break;
+        let collision = object.geometry.intersect(rayCollision, directionToLight)
+        if (collision) {
+          inShadow = true;
+          break;
+        }
       }
-    }
 
-    let dot = normal.dot(Scene.scene.lights[0].direction.normalize());
-    if(inShadow) dot = 0;
-    if (dot <= 0)
-      dot = 0
-    return { r: this.diffuseColor.r * dot, g: this.diffuseColor.g * dot, b: this.diffuseColor.b * dot };
+      let dot = normal.dot(light.direction.normalize());
+      if (inShadow) dot = 0;
+      if (dot <= 0)
+        dot = 0
+      lightSum = lightSum.add(new Vector3(this.diffuseColor.r * dot,this.diffuseColor.g * dot,this.diffuseColor.b * dot ));
+    }
+    
+    return { r: lightSum.r, g: lightSum.g, b: lightSum.b };
   }
 }
 
-class AmbientShader{
+class AmbientShader {
   constructor(ambientColor) {
     this.ambientColor = ambientColor;
   }
@@ -40,8 +45,8 @@ class AmbientShader{
 
 }
 
-class MixShader{
-  constructor(one, two, amount){
+class MixShader {
+  constructor(one, two, amount) {
     this.one = one;
     this.two = two;
     this.amount = amount;
@@ -50,35 +55,35 @@ class MixShader{
     let tempOne = this.one.illuminateObject(rayFrom, rayCollision, normal, collisionObject, remaining)
     let tempTwo = this.two.illuminateObject(rayFrom, rayCollision, normal, collisionObject, remaining)
     return {
-      r:this.amount*tempOne.r + (1-this.amount)*tempTwo.r,
-      g:this.amount*tempOne.g + (1-this.amount)*tempTwo.g,
-      b:this.amount*tempOne.b + (1-this.amount)*tempTwo.b
+      r: this.amount * tempOne.r + (1 - this.amount) * tempTwo.r,
+      g: this.amount * tempOne.g + (1 - this.amount) * tempTwo.g,
+      b: this.amount * tempOne.b + (1 - this.amount) * tempTwo.b
     }
   }
 
 }
 
-class ReflectiveShader{
+class ReflectiveShader {
   illuminateObject(rayFrom, rayCollision, normal, collisionObject) {
 
     let inShadow = false;
 
     let original = rayFrom.negate();
-    let reflectedRay = original.minus(normal.scale(original.dot(normal)*2));
+    let reflectedRay = original.minus(normal.scale(original.dot(normal) * 2));
 
     //Manually check for shadows
 
     for (let object of Scene.scene.rayTracedObjects) {
       if (object == collisionObject) continue
-      
+
       let collision = object.geometry.intersect(rayCollision, reflectedRay)
       if (collision) {
-       
+
       }
     }
 
     let dot = normal.dot(Scene.scene.lights[0].direction.normalize());
-    if(inShadow) dot = 0;
+    if (inShadow) dot = 0;
     if (dot <= 0)
       dot = 0
     return { r: this.diffuseColor.r * dot, g: this.diffuseColor.g * dot, b: this.diffuseColor.b * dot };
