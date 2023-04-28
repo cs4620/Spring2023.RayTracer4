@@ -19,7 +19,7 @@ function render(x, y, jitterAmount) {
 
 
   //Debug code
-  if (x == 202 && y == 140) {
+  if (x == 226 && y == 166) {
     //console.log("stop")
     let abc = 0;
   }
@@ -39,35 +39,7 @@ function render(x, y, jitterAmount) {
   let jittered = direction.add(new Vector3(evenRand(jitterAmount), evenRand(jitterAmount), evenRand(jitterAmount))).normalize()
 
   direction = jittered;
-  //Loop over all the rayTracedObjects in this scene
-  //Note that in an optimized ray tracer, 
-  //you can use spatial subdivision to reduce this from 
-  //O(n) to O(log(n))
-  // for (let rayTracedObject of Scene.scene.rayTracedObjects) {
-
-  //   //Get the geometry of the current object
-  //   let geometry = rayTracedObject.geometry
-
-  //   //Find the intersection with this object
-  //   let collision = geometry.intersect(origin, direction);
-
-  //   //Check to see if the collision exists...
-  //   //...and if it is closer than any other collision we've seen
-  //   if (collision && collision.timeToCollision < closestPositiveT) {
-  //     //Get the distance to collision
-  //     closestPositiveT = collision.timeToCollision
-
-  //     //Get the location of the collision
-  //     let c = collision.collisionLocation
-  //     let normal = collision.normalAtCollision
-
-  //     //Use the shader to calculate the color at this collision
-  //     rayTracedPixel = rayTracedObject.shader.illuminateObject(origin, c, normal, rayTracedObject)
-  //   }
-
-  //   //Store the color as a string
-  //   // let pixelString = `rgb(${rayTracedPixel.r}, ${rayTracedPixel.g}, ${rayTracedPixel.b})`;
-  // }
+  
   let result = closestCollision(origin, direction, 1);
   if (!result) return rayTracedPixel;
   rayTracedPixel = result.rayTracedObject.shader.illuminateObject(

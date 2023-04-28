@@ -59,13 +59,19 @@ class Triangle{
     
     //Get the perpendicular (normal) of the plane that contains this triangle
     let ABC = this.oneTwo.cross(this.threeTwo).normalize();
+
+    if(ABC.dot(direction) == 0){
+      return;
+    }
     
     //Calculate the D from the plane that contains this triangle
     let D = -(ABC.dot(this.one.position));
 
     //Calculate the time to collision
     let timeToCollision = (-D-origin.dot(ABC))/(direction.dot(ABC))
-    
+    if(timeToCollision <= 0)
+      return;
+      
     //Calculate the collision location
     let collisionLocation = origin.add(direction.scale(timeToCollision));
     

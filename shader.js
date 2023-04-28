@@ -95,17 +95,17 @@ class VolumeShader {
 
     let scale = 10;
     let light = true;
-    let x = Math.floor(rayCollision.x/10);
-    let y = Math.floor(rayCollision.y/10);
-    let z = Math.floor(rayCollision.z/10);
+    let x = Math.floor(rayCollision.x/scale);
+    let y = Math.floor(rayCollision.y/scale);
+    let z = Math.floor(rayCollision.z/scale);
     let sum = x + y + z;
     if (sum % 2 != 0) {
       light = false;
     }
     if (light)
-      return { r: 255, g: 0, b: 0 };
+      return { r: 200, g: 200, b: 200 };
     else
-      return {r:0,g:255,b:0};
+      return {r:150,g:150,b:150};
   }
 }
 

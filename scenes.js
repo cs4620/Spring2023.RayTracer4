@@ -12,9 +12,20 @@ f 1/1/1 2/2/1 3/3/1
 `
 
 let planeString = `
-v 0.000000 0.000000 0.000000
-v 1.000000 0.000000 0.000000
-v 0.000000 -1.000000 0.000000
+v 0.000000 0.000000 0.100000
+v 1.000000 0.000000 0.100000
+v 0.000000 -1.000000 0.10000
+vt 1.000000 0.000000
+vt 0.000000 1.000000
+vt 0.000000 0.000000
+vn 0.0000 1.0000 0.0000
+f 1/1/1 2/2/1 3/3/1
+`
+
+let planeString2 = `
+v 0.000000 49.100000 0.000000
+v 1.000000 49.100000 0.000000
+v 0.000000 48.900000 -1.00000
 vt 1.000000 0.000000
 vt 0.000000 1.000000
 vt 0.000000 0.000000
@@ -33,6 +44,7 @@ let s2 = new Sphere(new Vector3(0, -60, 0), 40);
 //Mesh definition(s)
 let mesh = Mesh.fromOBJ(objString);
 let planeMesh = Mesh.fromOBJ(planeString);
+let planeMesh2 = Mesh.fromOBJ(planeString2);
 
 //--
 //Camera defition(s)
@@ -68,6 +80,7 @@ let rayTracedSphere1 = new RayTracedObject(s, shader);
 let rayTracedSphere2 = new RayTracedObject(s2, mixed);
 let rayTracedTriangle = new RayTracedObject(mesh, shader);
 let rayTracedPlane = new RayTracedObject(planeMesh, volumeShader);
+let rayTracedPlane2 = new RayTracedObject(planeMesh2, volumeShader);
 
 //--
 //Lights
@@ -91,7 +104,7 @@ let twoSphereScenePerspective = new Scene([rayTracedSphere1,  rayTracedSphere2],
 let twoSphereDualPerspective = new Scene([rayTracedSphere1,  rayTracedSphere2], perspectiveCamera, dual)
 let oneSphereScenePerspective = new Scene([rayTracedSphere1],  perspectiveCamera, lights)
 let triangleScenePerspective = new Scene([rayTracedTriangle], perspectiveCamera, lights);
-let planeScenePerspective = new Scene([rayTracedPlane], perspectiveCamera, dual);
+let planeScenePerspective = new Scene([rayTracedPlane2, rayTracedSphere1, rayTracedSphere2], perspectiveCamera, dual);
 
 //--
 //Final scene definition.
