@@ -58,7 +58,7 @@ class Triangle{
     //First find the collision on the plane
     
     //Get the perpendicular (normal) of the plane that contains this triangle
-    let ABC = this.threeTwo.cross(this.oneTwo).normalize();
+    let ABC = this.oneTwo.cross(this.threeTwo).normalize();
     
     //Calculate the D from the plane that contains this triangle
     let D = -(ABC.dot(this.one.position));

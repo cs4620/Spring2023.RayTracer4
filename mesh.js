@@ -107,7 +107,7 @@ class Mesh {
    * @returns The collision point (if any)
    */
   intersect(rayOrigin, rayDirection) {
-    let closest = 10000; //Store the closest collision distance
+    let closest = Number.MAX_VALUE; //Store the closest collision distance
     let best = undefined //Store the closest collision object
 
     //Loop over the triangles

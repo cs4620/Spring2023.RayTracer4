@@ -28,7 +28,7 @@ function render(x, y, jitterAmount) {
   let rayTracedPixel = backgroundColor;
 
   //The distance to the closest collision for this pixel
-  let closestPositiveT = 10000000
+  let closestPositiveT = Number.MAX_VALUE
 
   //Determine the origin and direction of the ray
   let startX = x - width / 2;
@@ -83,7 +83,7 @@ function render(x, y, jitterAmount) {
 
 function closestCollision(origin, direction, remaining) {
   if (remaining <= 0) return;
-  let closestPositiveT = 1000000;
+  let closestPositiveT = Number.MAX_VALUE;
   let closestCollision;
   //let backgroundColor = Scene.scene?.options?.backgroundColor ? Scene.scene.options.backgroundColor : new Pixel(100, 100, 100)
 
