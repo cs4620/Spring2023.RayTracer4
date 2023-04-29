@@ -19,7 +19,7 @@ function render(x, y, jitterAmount) {
 
 
   //Debug code
-  if (x == 226 && y == 166) {
+  if (x == 170 && y == 148) {
     //console.log("stop")
     let abc = 0;
   }
@@ -40,7 +40,7 @@ function render(x, y, jitterAmount) {
 
   direction = jittered;
   
-  let result = closestCollision(origin, direction, 1);
+  let result = closestCollision(origin, direction, null,  1);
   if (!result) return rayTracedPixel;
   rayTracedPixel = result.rayTracedObject.shader.illuminateObject(
     origin,
@@ -53,7 +53,7 @@ function render(x, y, jitterAmount) {
 
 }
 
-function closestCollision(origin, direction, remaining) {
+function closestCollision(origin, direction, ignored = null, remaining = 1) {
   if (remaining <= 0) return;
   let closestPositiveT = Number.MAX_VALUE;
   let closestCollision;
@@ -62,7 +62,7 @@ function closestCollision(origin, direction, remaining) {
   //The color of the closest collision for this pixel
   //let rayTracedPixel = backgroundColor;
   for (let rayTracedObject of Scene.scene.rayTracedObjects) {
-
+    if(rayTracedObject == ignore) continue;
     //Get the geometry of the current object
     let geometry = rayTracedObject.geometry
 

@@ -38,8 +38,8 @@ f 1/1/1 2/2/1 3/3/1
 //-- 
 
 //Sphere defition(s)
-let s = new Sphere(new Vector3(0, 20, 0), 50);
-let s2 = new Sphere(new Vector3(0, -60, 0), 40);
+let sphere1 = new Sphere(new Vector3(0, 20, 0), 50);
+let sphere2 = new Sphere(new Vector3(0, -60, 0), 40);
 
 //Mesh definition(s)
 let mesh = Mesh.fromOBJ(objString);
@@ -72,15 +72,17 @@ let shader2 = new DiffuseShader({r:0, g:255, b:0});
 let ambientShader = new AmbientShader({r:100, g:100, b:100})
 let mixed = new MixShader(shader2, ambientShader, .9)
 let volumeShader = new VolumeShader();
+let mirrorShader = new MirrorShader();
 
 //--
 //RayTracedObject definition(s)
 //--
-let rayTracedSphere1 = new RayTracedObject(s, shader);
-let rayTracedSphere2 = new RayTracedObject(s2, mixed);
+let rayTracedSphere1 = new RayTracedObject(sphere1, shader);
+let rayTracedSphere2 = new RayTracedObject(sphere2, mixed);
 let rayTracedTriangle = new RayTracedObject(mesh, shader);
 let rayTracedPlane = new RayTracedObject(planeMesh, volumeShader);
 let rayTracedPlane2 = new RayTracedObject(planeMesh2, volumeShader);
+let mirrorSphere = new RayTracedObject(sphere1, mirrorShader);
 
 //--
 //Lights
@@ -104,7 +106,7 @@ let twoSphereScenePerspective = new Scene([rayTracedSphere1,  rayTracedSphere2],
 let twoSphereDualPerspective = new Scene([rayTracedSphere1,  rayTracedSphere2], perspectiveCamera, dual)
 let oneSphereScenePerspective = new Scene([rayTracedSphere1],  perspectiveCamera, lights)
 let triangleScenePerspective = new Scene([rayTracedTriangle], perspectiveCamera, lights);
-let planeScenePerspective = new Scene([rayTracedPlane2, rayTracedSphere1, rayTracedSphere2], perspectiveCamera, dual);
+let planeScenePerspective = new Scene([rayTracedPlane2, mirrorSphere, rayTracedSphere2], perspectiveCamera, dual);
 
 //--
 //Final scene definition.

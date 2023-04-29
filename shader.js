@@ -63,30 +63,26 @@ class MixShader {
 
 }
 
-class ReflectiveShader {
+class MirrorShader {
   illuminateObject(rayFrom, rayCollision, normal, collisionObject) {
 
     let inShadow = false;
 
     let original = rayFrom.negate();
-    let reflectedRay = original.minus(normal.scale(original.dot(normal) * 2));
+    let reflectedRay = original.minus(normal.scale(original.dot(normal) * 2)).normalize();
+    
+    let newOrigin = rayCollision;
+    let newDirection = reflectedRay;
+    let result = closestCollision(newOrigin, newDirection, collisionObject, 1);
+    if (!result) return {r:100, g:100, b:100};
 
-    //Manually check for shadows
-
-    for (let object of Scene.scene.rayTracedObjects) {
-      if (object == collisionObject) continue
-
-      let collision = object.geometry.intersect(rayCollision, reflectedRay)
-      if (collision) {
-
-      }
-    }
-
-    let dot = normal.dot(Scene.scene.lights[0].direction.normalize());
-    if (inShadow) dot = 0;
-    if (dot <= 0)
-      dot = 0
-    return { r: this.diffuseColor.r * dot, g: this.diffuseColor.g * dot, b: this.diffuseColor.b * dot };
+    let rayTracedPixel = result.rayTracedObject.shader.illuminateObject(
+      newOrigin,
+      result.collisionLocation,
+      result.normalAtCollision,
+      result.rayTracedObject
+    ) 
+    return rayTracedPixel;
   }
 }
 
