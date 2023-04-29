@@ -9,6 +9,7 @@
       background-color: black;
       height: 100%;
       overflow: hidden;
+      margin: 0;
     }
 
     /* See https://www.w3schools.com/css/tryit.asp?filename=trycss3_flexbox_perfect_center */
@@ -27,9 +28,18 @@
   </div>
   <script>
     document.querySelector("#canvas").addEventListener("mousemove", mousemove)
-    function mousemove(e){
-      document.title = (e.offsetX +" " + e.offsetY)
+    function mousemove(e) {
+      document.title = (e.offsetX + " " + e.offsetY)
     }
+    const urlParams = new URLSearchParams(window.location.search);
+    const myParam = urlParams.get('index');
+    const widthParam = urlParams.get('width');
+    const heightParam = urlParams.get('height')
+    
+    sceneIndex = myParam ? myParam : 0;
+    width = widthParam ? parseInt(widthParam) : 400;
+    height = heightParam ? parseInt(heightParam) : 400
+    //console.log(sceneIndex)
   </script>
   <script src="vector.js"></script>
   <script src="pixel.js"></script>

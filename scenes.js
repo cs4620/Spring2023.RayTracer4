@@ -67,22 +67,28 @@ let perspectiveCamera = new Camera(
 //--
 //Shader definition(s)
 //-
-let shader = new DiffuseShader({r:255, g:255, b:255});
-let shader2 = new DiffuseShader({r:0, g:255, b:0});
+let diffuseShaderWhite = new DiffuseShader({r:255, g:255, b:255});
+let diffuseShaderRed = new DiffuseShader({r:255, g:0, b:0});
+let diffuseShaderGreen = new DiffuseShader({r:0, g:255, b:0});
+let diffuseShaderBlue = new DiffuseShader({r:0, g:0, b:255});
+
 let ambientShader = new AmbientShader({r:100, g:100, b:100})
-let mixed = new MixShader(shader2, ambientShader, .9)
+let greenAndAmbientMixShader = new MixShader(diffuseShaderGreen, ambientShader, .9)
+
 let volumeShader = new VolumeShader();
-let mirrorShader = new MirrorShader();
+
+let perfectMirrorShader = new MirrorShader();
+let semiMirrorShader = new MixShader(diffuseShaderBlue, perfectMirrorShader, .75)
 
 //--
 //RayTracedObject definition(s)
 //--
-let rayTracedSphere1 = new RayTracedObject(sphere1, shader);
-let rayTracedSphere2 = new RayTracedObject(sphere2, mixed);
-let rayTracedTriangle = new RayTracedObject(mesh, shader);
+let rayTracedSphere1 = new RayTracedObject(sphere1, diffuseShaderWhite);
+let rayTracedSphere2 = new RayTracedObject(sphere2, greenAndAmbientMixShader);
+let rayTracedTriangle = new RayTracedObject(mesh, diffuseShaderWhite);
 let rayTracedPlane = new RayTracedObject(planeMesh, volumeShader);
 let rayTracedPlane2 = new RayTracedObject(planeMesh2, volumeShader);
-let mirrorSphere = new RayTracedObject(sphere1, mirrorShader);
+let mirrorSphere = new RayTracedObject(sphere1, semiMirrorShader);
 
 //--
 //Lights
@@ -108,8 +114,24 @@ let oneSphereScenePerspective = new Scene([rayTracedSphere1],  perspectiveCamera
 let triangleScenePerspective = new Scene([rayTracedTriangle], perspectiveCamera, lights);
 let planeScenePerspective = new Scene([rayTracedPlane2, mirrorSphere, rayTracedSphere2], perspectiveCamera, dual);
 
+
+//let sceneIndex = 0;
+if(!sceneIndex) sceneIndex = 0;
+let allScenes = [
+  // twoSphereSceneOrthographic,
+  // twoSphereDualOrthographic,
+  // oneSphereSceneOrthographic,
+  // triangleSceneOrthographic,
+  twoSphereScenePerspective,
+  twoSphereDualPerspective,
+  oneSphereScenePerspective,
+  // triangleScenePerspective,
+  planeScenePerspective,
+
+]
+
 //--
 //Final scene definition.
 //This is the scene that gets rendered
 //--
-Scene.scene = planeScenePerspective;
+Scene.scene = allScenes[sceneIndex];

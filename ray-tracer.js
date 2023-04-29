@@ -9,8 +9,8 @@ function evenRand(amount) {
 function render(x, y, jitterAmount) {
   //console.log("Going")
   //Grab the width and height from the scene object (if they exist)
-  let width = Scene.scene?.options?.width ? Scene.scene.options.width : 400
-  let height = Scene.scene?.options?.height ? Scene.scene.options.height : 400
+  //let width = Scene.scene?.options?.width ? Scene.scene.options.width : 400
+  //let height = Scene.scene?.options?.height ? Scene.scene.options.height : 400
 
   //Grab the background color from the scene object (if it is defined)
   let backgroundColor = Scene.scene?.options?.backgroundColor ? Scene.scene.options.backgroundColor : new Pixel(100, 100, 100)
@@ -62,7 +62,7 @@ function closestCollision(origin, direction, ignored = null, remaining = 1) {
   //The color of the closest collision for this pixel
   //let rayTracedPixel = backgroundColor;
   for (let rayTracedObject of Scene.scene.rayTracedObjects) {
-    if(rayTracedObject == ignore) continue;
+    if(rayTracedObject == ignored) continue;
     //Get the geometry of the current object
     let geometry = rayTracedObject.geometry
 
@@ -93,8 +93,8 @@ function closestCollision(origin, direction, ignored = null, remaining = 1) {
 async function main() {
 
   //Grab the width and height from the scene object (if they exist)
-  let width = Scene.scene?.options?.width ? Scene.scene.options.width : 400
-  let height = Scene.scene?.options?.height ? Scene.scene.options.height : 400
+  // let width = Scene.scene?.options?.width ? Scene.scene.options.width : 400
+  // let height = Scene.scene?.options?.height ? Scene.scene.options.height : 400
 
 
   let canvas = document.querySelector("canvas");
