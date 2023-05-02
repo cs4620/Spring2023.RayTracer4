@@ -107,6 +107,14 @@ let perspectiveCamera = new Camera(
   Math.PI/4
   )
 
+let perspectiveCamera2 = new Camera(
+  new Vector3(.1,.1,250), 
+  new Vector3(0,0,-1), 
+  Vector3.up, 
+  Camera.Perspective,
+  Math.PI/8
+  )
+
 //--
 //Shader definition(s)
 //-
@@ -170,7 +178,7 @@ let mirroredPlanes = new Scene([
   new RayTracedObject(sphere4, new MixShader(diffuseShaderGreen, perfectMirrorShader, .15)), 
   new RayTracedObject(sphere5, new MixShader(diffuseShaderBlue, perfectMirrorShader, .15)), 
   new RayTracedObject(sphere6, diffuseShaderBlue)] ,
-  perspectiveCamera, 
+  perspectiveCamera2, 
   dual);
 
 
