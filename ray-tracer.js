@@ -1,34 +1,80 @@
 "use strict"
 
+/** Get a random number in [-1,1] scaled by amount */
 function evenRand(amount) {
   return (Math.random() * 2 - 1) * amount
 }
+
+/**
+ * The main ray tracing routine
+ */
+async function main() {
+  let canvas = document.querySelector("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  let ctx = canvas.getContext("2d")
+
+  let image = Array.from(Array(width), () => new Array(height))
+  let maxIteration = 0;
+  let minCount = 1;
+  let stop = samples;
+
+  //Ray Tracer starts
+  //Loop over all the pixels
+  for (let i = 0; i < stop; i++) {
+    for (let y = 0; y < height; y++) {
+      //setTimeout(() => {
+      for (let x = 0; x < width; x++) {
+        if (!image[x][y])
+          image[x][y] = []
+        let entry = image[x][y]
+        let count = entry.length
+        //Drop out if our color is consistent enough
+        if (count > minCount) {
+          let noop
+        }
+        if (x == Math.floor(width / 2) && y == Math.floor(height / 2)) {
+          let noop;
+        }
+
+        let color = render(x, y, jitterAmount);
+        count++;
+        entry.push(color)
+
+        let r = entry.map(p => p.r).reduce((a, b) => a + b, 0) / count;
+        let g = entry.map(p => p.g).reduce((a, b) => a + b, 0) / count;
+        let b = entry.map(p => p.b).reduce((a, b) => a + b, 0) / count;
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
+        ctx.fillRect(x, y, 1, 1)
+      }
+      if (i > maxIteration) {
+        maxIteration = i
+        console.log(maxIteration / stop)
+      }
+      //})
+
+    }
+  }
+
+  ctx.fillStyle = "red";
+  ctx.fillRect(width / 2, height / 2, 1, 1);
+}
+
 /**
  * Run our ray tracer
  */
 function render(x, y, jitterAmount) {
-  //console.log("Going")
-  //Grab the width and height from the scene object (if they exist)
-  //let width = Scene.scene?.options?.width ? Scene.scene.options.width : 400
-  //let height = Scene.scene?.options?.height ? Scene.scene.options.height : 400
-
   //Grab the background color from the scene object (if it is defined)
-  let backgroundColor = Scene.scene?.options?.backgroundColor ? Scene.scene.options.backgroundColor : new Pixel(100, 100, 100)
-  // let image = new Image(width, height);
-
-
-
+  let backgroundColor = Scene.scene?.options?.backgroundColor ? Scene.scene.options.backgroundColor : new Vector3(100, 100, 100)
+  
   //Debug code
   if (x == 170 && y == 148) {
     //console.log("stop")
-    let abc = 0;
+    let noop;
   }
 
   //The color of the closest collision for this pixel
   let rayTracedPixel = backgroundColor;
-
-  //The distance to the closest collision for this pixel
-  let closestPositiveT = Number.MAX_VALUE
 
   //Determine the origin and direction of the ray
   let startX = x - width / 2;
@@ -50,17 +96,14 @@ function render(x, y, jitterAmount) {
   )
 
   return rayTracedPixel;
-
 }
 
 function closestCollision(origin, direction, ignored = null, remaining = 1) {
   if (remaining <= 0) return;
   let closestPositiveT = Number.MAX_VALUE;
   let closestCollision;
-  //let backgroundColor = Scene.scene?.options?.backgroundColor ? Scene.scene.options.backgroundColor : new Pixel(100, 100, 100)
-
+  
   //The color of the closest collision for this pixel
-  //let rayTracedPixel = backgroundColor;
   for (let rayTracedObject of Scene.scene.rayTracedObjects) {
     if(rayTracedObject == ignored) continue;
     //Get the geometry of the current object
@@ -89,70 +132,5 @@ function closestCollision(origin, direction, ignored = null, remaining = 1) {
   return closestCollision;
 }
 
-
-async function main() {
-
-  //Grab the width and height from the scene object (if they exist)
-  // let width = Scene.scene?.options?.width ? Scene.scene.options.width : 400
-  // let height = Scene.scene?.options?.height ? Scene.scene.options.height : 400
-
-
-  let canvas = document.querySelector("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  let ctx = canvas.getContext("2d")
-
-  //Test code
-  let rayTracedObjects = Scene.scene.rayTracedObjects
-
-  let image = Array.from(Array(width), () => new Array(height))
-  let maxIteration = 0;
-  let minCount = 1;
-  let stop = 1;
-
-  //Ray Tracer starts
-  //Loop over all the pixels
-  for (let i = 0; i < stop; i++) {
-    for (let y = 0; y < height; y++) {
-      //setTimeout(() => {
-      for (let x = 0; x < width; x++) {
-        if (!image[x][y])
-          image[x][y] = []
-        let entry = image[x][y]
-        let count = entry.length
-        //Drop out if our color is consistent enough
-        if (count > minCount) {
-          let z = 1;
-        }
-        if (x == Math.floor(width / 2) && y == Math.floor(height / 2)) {
-          let aa = 1;
-        }
-
-        let color = render(x, y, 0);
-        count++;
-        entry.push(color)
-
-        let r = entry.map(p => p.r).reduce((a, b) => a + b, 0) / count;
-        let g = entry.map(p => p.g).reduce((a, b) => a + b, 0) / count;
-        let b = entry.map(p => p.b).reduce((a, b) => a + b, 0) / count;
-        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
-        ctx.fillRect(x, y, 1, 1)
-      }
-      if (i > maxIteration) {
-        maxIteration = i
-        console.log(maxIteration / stop)
-      }
-      //})
-
-    }
-  }
-
-  ctx.fillStyle = "red";
-  ctx.fillRect(width / 2, height / 2, 1, 1);
-
-}
-
 //Run the main ray tracer
 main();
-
-

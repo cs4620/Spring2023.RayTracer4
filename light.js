@@ -1,7 +1,3 @@
-class Light{
-
-}
-
 class SunLight{
   constructor(color, direction){
     this.color = color;

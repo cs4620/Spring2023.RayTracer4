@@ -66,8 +66,6 @@ class MixShader {
 class MirrorShader {
   illuminateObject(rayFrom, rayCollision, normal, collisionObject) {
 
-    let inShadow = false;
-
     let original = rayFrom.negate();
     let reflectedRay = original.minus(normal.scale(original.dot(normal) * 2)).normalize();
     
