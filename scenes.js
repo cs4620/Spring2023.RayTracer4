@@ -33,6 +33,41 @@ vn 0.0000 1.0000 0.0000
 f 1/1/1 2/2/1 3/3/1
 `
 
+let planeString3 = `
+v 0.000000 90.100000 0.000000
+v 1.000000 90.100000 0.000000
+v 0.000000 89.900000 -1.00000
+vt 1.000000 0.000000
+vt 0.000000 1.000000
+vt 0.000000 0.000000
+vn 0.0000 1.0000 0.0000
+f 1/1/1 2/2/1 3/3/1
+`
+
+let planeString4 = `
+v 0 0 900.100000 
+v 1 0 900.100000 
+v 0 -1 890.900000
+vt 1.000000 0.000000
+vt 0.000000 1.000000
+vt 0.000000 0.000000
+vn 0.0000 1.0000 0.0000
+f 1/1/1 2/2/1 3/3/1
+`
+
+let planeString5 = `
+v -900.100000 0 0.000000
+v -900.100000 1 0.000000
+v -890.900000 0 -1.00000
+vt 1.000000 0.000000
+vt 0.000000 1.000000
+vt 0.000000 0.000000
+vn 0.0000 1.0000 0.0000
+f 1/1/1 2/2/1 3/3/1
+`
+
+
+
 //--
 //Geometries
 //-- 
@@ -41,10 +76,18 @@ f 1/1/1 2/2/1 3/3/1
 let sphere1 = new Sphere(new Vector3(0, 20, 0), 50);
 let sphere2 = new Sphere(new Vector3(0, -60, 0), 40);
 
+let sphere3 = new Sphere(new Vector3(40, 40, 0), 40);
+let sphere4 = new Sphere(new Vector3(40, -40, 0), 40);
+let sphere5 = new Sphere(new Vector3(-40, 40, 0), 40);
+let sphere6 = new Sphere(new Vector3(-40, -40, 0), 40);
+
 //Mesh definition(s)
 let mesh = Mesh.fromOBJ(objString);
 let planeMesh = Mesh.fromOBJ(planeString);
 let planeMesh2 = Mesh.fromOBJ(planeString2);
+let planeMesh3 = Mesh.fromOBJ(planeString3);
+let planeMesh4 = Mesh.fromOBJ(planeString4);
+let planeMesh5 = Mesh.fromOBJ(planeString5);
 
 //--
 //Camera defition(s)
@@ -119,6 +162,17 @@ let planeScenePerspective = new Scene([
   perspectiveCamera, 
   dual);
 
+let mirroredPlanes = new Scene([
+  new RayTracedObject(planeMesh3, new VolumeShader()), 
+  // new RayTracedObject(planeMesh4, new MixShader(diffuseShaderRed, perfectMirrorShader, .15)), 
+  // new RayTracedObject(planeMesh5, new MixShader(diffuseShaderRed, perfectMirrorShader, .15)), 
+  new RayTracedObject(sphere3, diffuseShaderGreen), 
+  new RayTracedObject(sphere4, new MixShader(diffuseShaderGreen, perfectMirrorShader, .15)), 
+  new RayTracedObject(sphere5, new MixShader(diffuseShaderBlue, perfectMirrorShader, .15)), 
+  new RayTracedObject(sphere6, diffuseShaderBlue)] ,
+  perspectiveCamera, 
+  dual);
+
 
 //let sceneIndex = 0;
 if(!sceneIndex) sceneIndex = 0;
@@ -132,6 +186,7 @@ let allScenes = [
   oneSphereScenePerspective,
   // triangleScenePerspective,
   planeScenePerspective,
+  mirroredPlanes,
 
 ]
 
