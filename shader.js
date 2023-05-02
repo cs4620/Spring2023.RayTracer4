@@ -7,6 +7,7 @@ class DiffuseShader {
     this.diffuseColor = diffuseColor;
   }
   illuminateObject(rayFrom, rayCollision, normal, collisionObject, remaining) {
+    
 
     let lightSum = Vector3.zero;
     for (let light of Scene.scene.lights) {
@@ -64,7 +65,10 @@ class MixShader {
 }
 
 class MirrorShader {
-  illuminateObject(rayFrom, rayCollision, normal, collisionObject) {
+  illuminateObject(rayFrom, rayCollision, normal, collisionObject, remaining) {
+    if(remaining <= 0){
+      return {r:0,g:0,b:0};
+    }
 
     let original = rayFrom.negate();
     let reflectedRay = original.minus(normal.scale(original.dot(normal) * 2)).normalize();
@@ -78,7 +82,8 @@ class MirrorShader {
       newOrigin,
       result.collisionLocation,
       result.normalAtCollision,
-      result.rayTracedObject
+      result.rayTracedObject,
+      remaining-1
     ) 
     return rayTracedPixel;
   }
@@ -87,7 +92,7 @@ class MirrorShader {
 class VolumeShader {
   illuminateObject(rayFrom, rayCollision, normal, collisionObject, remaining) {
 
-    let scale = 10;
+    let scale = 100;
     let light = true;
     let x = Math.floor(rayCollision.x/scale);
     let y = Math.floor(rayCollision.y/scale);

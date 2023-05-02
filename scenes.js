@@ -112,7 +112,12 @@ let twoSphereScenePerspective = new Scene([rayTracedSphere1,  rayTracedSphere2],
 let twoSphereDualPerspective = new Scene([rayTracedSphere1,  rayTracedSphere2], perspectiveCamera, dual)
 let oneSphereScenePerspective = new Scene([rayTracedSphere1],  perspectiveCamera, lights)
 let triangleScenePerspective = new Scene([rayTracedTriangle], perspectiveCamera, lights);
-let planeScenePerspective = new Scene([rayTracedPlane2, mirrorSphere, rayTracedSphere2], perspectiveCamera, dual);
+let planeScenePerspective = new Scene([
+  rayTracedPlane2, 
+  new RayTracedObject(sphere1, new MixShader(diffuseShaderBlue, perfectMirrorShader, .25)), 
+  new RayTracedObject(sphere2, new MixShader(diffuseShaderBlue, perfectMirrorShader, .25))], 
+  perspectiveCamera, 
+  dual);
 
 
 //let sceneIndex = 0;
