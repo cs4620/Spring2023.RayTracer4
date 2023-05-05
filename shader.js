@@ -1,3 +1,6 @@
+/**
+ * Generic Shader class. Think of this as an interface.
+ */
 class Shader {
 
 }
