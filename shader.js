@@ -5,6 +5,9 @@ class Shader {
 
 }
 
+/**
+ * A diffuse light shader
+ */
 class DiffuseShader {
   constructor(diffuseColor) {
     this.diffuseColor = diffuseColor;
