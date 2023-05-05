@@ -42,6 +42,9 @@ class DiffuseShader {
   }
 }
 
+/**
+ * An ambient shader
+ */
 class AmbientShader {
   constructor(ambientColor) {
     this.ambientColor = ambientColor;
